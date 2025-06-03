@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    # release on tag push
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  build_wheels:
+    name: Build wheels
+    permissions:
+      contents: read
+    uses: ./.github/workflows/wheels.yml
+
+  build_docs:
+    name: Build docs
+    uses: ./.github/workflows/sphinx.yml
+
+  create_release:
+    name: Create Release
+    needs: [build_wheels, build_docs]
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Get version
+        id: get_version
+        run: |
+          echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+          echo ${{ env.VERSION }}
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # download all artifacts to project dir
+      - uses: actions/download-artifact@v4
+
+      - name: check artifacts
+        run: |
+          ls -l packages/
+
+      - name: Generate changes file
+        uses: sarnold/gitchangelog-action@915234f151ceffb7a8c4f76de77e4ae321087b8f  # v1.1.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN}}
+
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631  # v2.2.2
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
+          body_path: CHANGES.md
+          draft: false
+          prerelease: false
+          files: |
+            packages/*.whl
+            packages/*.tar.gz
