@@ -1,0 +1,109 @@
+# To install the git pre-commit hook run:
+#   pre-commit install
+# To update the pre-commit hooks run:
+#   pre-commit install-hooks
+exclude: '^(.tox/|docs/|^setup.py$)'
+repos:
+  - repo: meta
+    hooks:
+      - id: check-useless-excludes
+      - id: check-hooks-apply
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        exclude: '^gh/images/'
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: debug-statements
+      #- id: requirements-txt-fixer
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: fix-encoding-pragma
+        args: ['--remove']
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-toml
+      - id: check-yaml
+        exclude: '(.pep8speaks.yml)'
+
+  - repo: https://github.com/ambv/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        name: "Format code"
+        language_version: python3
+
+  - repo: https://github.com/pycqa/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+        args: [--settings-path=pyproject.toml]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0
+    hooks:
+    - id: mypy
+      args:
+        - --follow-imports=normal
+        - --install-types
+        - --non-interactive
+        - --check-untyped-defs
+      files: src/
+
+  - repo: "https://github.com/asottile/blacken-docs"
+    rev: "1.19.1"
+    hooks:
+      - id: "blacken-docs"
+        name: "Format docs (blacken-docs)"
+        args: ["-l", "64"]
+        additional_dependencies:
+          - "black==23.1.0"
+
+  - repo: https://github.com/PyCQA/doc8
+    rev: v1.1.2
+    hooks:
+      - id: doc8
+        args:
+          - '--max-line-length=90'
+
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: rst-backticks
+        # exclude: ChangeLog\.rst$
+      - id: rst-directive-colons
+      - id: rst-inline-touching-normal
+
+  - repo: https://github.com/myint/autoflake
+    rev: v2.3.1
+    hooks:
+      - id: autoflake
+        files: src/
+        args:
+          - --in-place
+          - --remove-all-unused-imports
+          - --remove-duplicate-keys
+          - --remove-unused-variables
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.2
+    hooks:
+      - id: flake8
+        files: src/
+        additional_dependencies: ["flake8-bugbear"]
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.3
+    hooks:
+      - id: bandit
+        args: ["-ll", "-q", "-c", "pyproject.toml"]
+        files: src/
+
+#  - repo: https://github.com/lovesegfault/beautysh
+#    rev: v6.2.1
+#    hooks:
+#      - id: beautysh
