@@ -9,27 +9,26 @@ import errno
 import stat
 
 from shlex import split
-from typing import Callable, Dict, List
+from typing import Callable, Dict
 
 
 class LogWatcher:
     """
-    Looks for changes in all files of a directory. This is useful for
-    watching log file changes in real-time. It also supports file rotation.
-
-    Example:
-
-    >>> def callback(filename, lines):
-    ...     print(filename, lines)
-    ...
-    >>> lw = LogWatcher("/var/log/", callback)
-    >>> lw.loop()
     """
 
     def __init__(self, folder: str, callback: Callable, extensions = "log",
                 tail_lines: int = 0, sizehint: int = 1048576):
         """
-        Arguments:
+        Looks for changes in all files of a directory. This is useful for
+        watching log file changes in real-time. It also supports file rotation.
+
+        Example:
+
+        >>> def callback(filename, lines):
+        ...     print(filename, lines)
+        ...
+        >>> lw = LogWatcher("/var/log/", callback)
+        >>> lw.loop()
 
         (str) @folder:
             the folder to watch
@@ -133,28 +132,28 @@ class LogWatcher:
             msg = f'invalid window value: {window}'
             raise ValueError(msg)
         with cls.open(fname) as f:
-            BUFSIZ = 1024
+            buff_size = 1024
             # True if open() was overridden and file was opened in text
             # mode. In that case readlines() will return unicode strings
             # instead of bytes.
             encoded = getattr(f, 'encoding', False)
-            CR = '\n' if encoded else b'\n'
+            end = '\n' if encoded else b'\n'
             data = '' if encoded else b''
             f.seek(0, os.SEEK_END)
             fsize = f.tell()
             block = -1
             Exit = False
             while not Exit:
-                step = block * BUFSIZ
+                step = block * buff_size
                 if abs(step) >= fsize:
                     f.seek(0)
-                    newdata = f.read(BUFSIZ - (abs(step) - fsize))
+                    newdata = f.read(buff_size - (abs(step) - fsize))
                     Exit = True
                 else:
                     f.seek(step, os.SEEK_END)
-                    newdata = f.read(BUFSIZ)
+                    newdata = f.read(buff_size)
                 data = newdata + data
-                if data.count(CR) >= window:
+                if data.count(end) >= window:
                     break
                 block -= 1
             return data.splitlines()[-window:]
