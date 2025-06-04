@@ -1,6 +1,7 @@
 # https://code.activestate.com/recipes/577968-log-watcher-tail-f-log
 
 import os
+import sys
 
 import unittest
 import atexit
@@ -58,7 +59,7 @@ class TestLogWatcher(unittest.TestCase):
         self.write_file('foo\n')
         self.write_file('bar\n')
         self.watcher.loop(blocking=False)
-        self.assertEqual(self.lines, [b"foo\n", b"bar\n"])
+        self.assertEqual(self.lines, [b"foo\r\n", b"bar\r\n"] if sys.platform == "win32" else [b"foo\n", b"bar\n"])
         self.assertEqual(self.filename, [os.path.abspath(TESTFN)])
 
     def test_new_file(self):
