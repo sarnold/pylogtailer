@@ -1,10 +1,9 @@
 # https://code.activestate.com/recipes/577968-log-watcher-tail-f-log
 
+import atexit
 import os
 import sys
-
 import unittest
-import atexit
 
 from logwatcher.logwatcher import LogWatcher
 
@@ -59,7 +58,10 @@ class TestLogWatcher(unittest.TestCase):
         self.write_file('foo\n')
         self.write_file('bar\n')
         self.watcher.loop(blocking=False)
-        self.assertEqual(self.lines, [b"foo\r\n", b"bar\r\n"] if sys.platform == "win32" else [b"foo\n", b"bar\n"])
+        self.assertEqual(
+            self.lines,
+            [b"foo\r\n", b"bar\r\n"] if sys.platform == "win32" else [b"foo\n", b"bar\n"],
+        )
         self.assertEqual(self.filename, [os.path.abspath(TESTFN)])
 
     def test_new_file(self):
@@ -85,11 +87,11 @@ class TestLogWatcher(unittest.TestCase):
         # input < BUFSIZ (1 iteration)
         lines = self.watcher.tail(self.file.name, 100)
         self.assertEqual(len(lines), 100)
-        self.assertEqual(lines, [b(str(x)) for x in range(MAX-100, MAX)])
+        self.assertEqual(lines, [b(str(x)) for x in range(MAX - 100, MAX)])
         # input > BUFSIZ (multiple iterations)
         lines = self.watcher.tail(self.file.name, 5000)
         self.assertEqual(len(lines), 5000)
-        self.assertEqual(lines, [b(str(x)) for x in range(MAX-5000, MAX)])
+        self.assertEqual(lines, [b(str(x)) for x in range(MAX - 5000, MAX)])
         # input > file's total lines
         lines = self.watcher.tail(self.file.name, MAX + 9999)
         self.assertEqual(len(lines), MAX)

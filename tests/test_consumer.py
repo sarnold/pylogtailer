@@ -24,6 +24,7 @@ log_str = """
 2025-05-16 18:06:06 UTC INFO tftpd.stop(262) Stopped
 """
 
+
 def callback(filename, lines):
     print(filename, lines)
 

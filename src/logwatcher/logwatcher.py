@@ -3,25 +3,29 @@ Real-time log file watcher supporting log rotation.
 Works with Python >= 3.2, on both POSIX and Windows.
 """
 
-import os
-import time
 import errno
+import os
 import stat
-
+import time
 from shlex import split
 from typing import Callable, Dict
 
 
 class LogWatcher:
     """
+    Looks for changes in all files of a directory. This is useful for
+    watching log file changes in real-time. It also supports file rotation.
     """
 
-    def __init__(self, folder: str, callback: Callable, extensions = "log",
-                tail_lines: int = 0, sizehint: int = 1048576):
+    def __init__(
+        self,
+        folder: str,
+        callback: Callable,
+        extensions="log",
+        tail_lines: int = 0,
+        sizehint: int = 1048576,
+    ):
         """
-        Looks for changes in all files of a directory. This is useful for
-        watching log file changes in real-time. It also supports file rotation.
-
         Example:
 
         >>> def callback(filename, lines):
@@ -101,8 +105,7 @@ class LogWatcher:
         """
         ls = os.listdir(self.folder)
         if self.extensions:
-            return [x for x in ls if os.path.splitext(x)[1][1:] \
-                                           in self.extensions]
+            return [x for x in ls if os.path.splitext(x)[1][1:] in self.extensions]
         return ls
 
     @classmethod
