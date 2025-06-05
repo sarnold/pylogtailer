@@ -30,24 +30,19 @@ class LogWatcher:
         >>> lw = LogWatcher("/var/log/", callback)
         >>> lw.loop()
 
-        (str) @folder:
-            the folder to watch
+        * callback function is called every time one of the files being
+          watched is updated; this is called with "filename" and "lines"
+          arguments.
+        * sizehint is passed to file.readlines() and represents an
+          approximation of the maximum number of bytes to read from
+          a file on every ieration (as opposed to load the entire
+          file in memory until EOF is reached). Defaults to 1MB.
 
-        (callable) @callback:
-            a function which is called every time one of the file being
-            watched is updated;
-            this is called with "filename" and "lines" arguments.
-
-        (list) @extensions:
-            only watch files with these extensions
-
-        (int) @tail_lines:
-            read last N lines from files being watched before starting
-
-        (int) @sizehint: passed to file.readlines(), represents an
-            approximation of the maximum number of bytes to read from
-            a file on every ieration (as opposed to load the entire
-            file in memory until EOF is reached). Defaults to 1MB.
+        :param folder: the folder to watch
+        :param callback: function to be called
+        :param extensions: watch files with these extensions
+        :param tail_lines: read last N lines from watched files
+        :param sizehint: bytes to read on each iteration
         """
         self.folder = os.path.realpath(folder)
         self.extensions = split(extensions)
@@ -117,7 +112,7 @@ class LogWatcher:
         will return bytes on both Python 2 and 3.
         This means callback() will deal with a list of bytes.
         Can be overridden in order to deal with unicode strings
-        instead, like this:
+        instead, like this::
 
           import codecs, locale
           return codecs.open(file, 'r', encoding=locale.getpreferredencoding(),
