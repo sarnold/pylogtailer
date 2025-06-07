@@ -3,25 +3,29 @@ Real-time log file watcher supporting log rotation.
 Works with Python >= 3.2, on both POSIX and Windows.
 """
 
-import os
-import time
 import errno
+import os
 import stat
-
+import time
 from shlex import split
 from typing import Callable, Dict
 
 
 class LogWatcher:
     """
+    Looks for changes in all files of a directory. This is useful for
+    watching log file changes in real-time. It also supports file rotation.
     """
 
-    def __init__(self, folder: str, callback: Callable, extensions = "log",
-                tail_lines: int = 0, sizehint: int = 1048576):
+    def __init__(
+        self,
+        folder: str,
+        callback: Callable,
+        extensions="log",
+        tail_lines: int = 0,
+        sizehint: int = 1048576,
+    ):
         """
-        Looks for changes in all files of a directory. This is useful for
-        watching log file changes in real-time. It also supports file rotation.
-
         Example:
 
         >>> def callback(filename, lines):
@@ -30,24 +34,19 @@ class LogWatcher:
         >>> lw = LogWatcher("/var/log/", callback)
         >>> lw.loop()
 
-        (str) @folder:
-            the folder to watch
+        * callback function is called every time one of the files being
+          watched is updated; this is called with "filename" and "lines"
+          arguments.
+        * sizehint is passed to file.readlines() and represents an
+          approximation of the maximum number of bytes to read from
+          a file on every ieration (as opposed to load the entire
+          file in memory until EOF is reached). Defaults to 1MB.
 
-        (callable) @callback:
-            a function which is called every time one of the file being
-            watched is updated;
-            this is called with "filename" and "lines" arguments.
-
-        (list) @extensions:
-            only watch files with these extensions
-
-        (int) @tail_lines:
-            read last N lines from files being watched before starting
-
-        (int) @sizehint: passed to file.readlines(), represents an
-            approximation of the maximum number of bytes to read from
-            a file on every ieration (as opposed to load the entire
-            file in memory until EOF is reached). Defaults to 1MB.
+        :param folder: the folder to watch
+        :param callback: function to be called
+        :param extensions: watch files with these extensions
+        :param tail_lines: read last N lines from watched files
+        :param sizehint: bytes to read on each iteration
         """
         self.folder = os.path.realpath(folder)
         self.extensions = split(extensions)
@@ -106,8 +105,7 @@ class LogWatcher:
         """
         ls = os.listdir(self.folder)
         if self.extensions:
-            return [x for x in ls if os.path.splitext(x)[1][1:] \
-                                           in self.extensions]
+            return [x for x in ls if os.path.splitext(x)[1][1:] in self.extensions]
         return ls
 
     @classmethod
@@ -117,7 +115,7 @@ class LogWatcher:
         will return bytes on both Python 2 and 3.
         This means callback() will deal with a list of bytes.
         Can be overridden in order to deal with unicode strings
-        instead, like this:
+        instead, like this::
 
           import codecs, locale
           return codecs.open(file, 'r', encoding=locale.getpreferredencoding(),

@@ -12,13 +12,13 @@ repos:
     rev: v5.0.0
     hooks:
       - id: check-added-large-files
-        exclude: '^gh/images/'
+        #exclude: '^gh/images/'
       - id: check-case-conflict
       - id: check-merge-conflict
       - id: check-symlinks
       - id: debug-statements
       #- id: requirements-txt-fixer
-      - id: check-executables-have-shebangs
+      #- id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
       - id: fix-encoding-pragma
         args: ['--remove']
@@ -44,7 +44,7 @@ repos:
         args: [--settings-path=pyproject.toml]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.15.0
+    rev: v1.16.0
     hooks:
     - id: mypy
       args:
@@ -90,7 +90,7 @@ repos:
           - --remove-unused-variables
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 7.1.2
+    rev: 7.2.0
     hooks:
       - id: flake8
         files: src/

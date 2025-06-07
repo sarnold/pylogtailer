@@ -1,18 +1,37 @@
 Python Log Watcher
 ==================
 
+**Watch files for changes**.
 
-Make a ``badges`` branch
-------------------------
+Real-time log file watcher supporting log rotation.
+Works with Python >= 3.2, on both POSIX and Windows.
 
-Create an orphan branch for Pylint and Coverage workflows. In a fresh
-checkout, run the following commands::
 
-  $ git checkout --orphan badges
-  $ git reset --hard
-  $ git commit --allow-empty -m "Initializing badges branch"
-  $ git push origin badges
-  $ git checkout main
+|ci| |wheels| |bandit| |release|
+
+|pre| |cov| |pylint|
+
+|tag| |license| |python|
+
+A python class that "watches" a directory and calls a callback(filename, lines)
+function every time one of the watched files gets written to, in real time.
+
+Practically speaking, this can be compared to ``tail -F *.log`` UNIX
+command, but instead of having lines printed to stdout a python
+function gets called.
+
+Similar to tail, it takes care of "watching" new files which are
+created after initialization and "unwatching" those which are removed
+in the meantime. This means you'll be able to "follow" and support also
+rotating log files.
+
+Example::
+
+  >>> def callback(filename, lines):
+  ...     print(filename, lines)
+  ...
+  >>> lw = LogWatcher("/var/log/", callback)
+  >>> lw.loop()
 
 
 Dev tools
@@ -40,7 +59,7 @@ The above will run the default test command using the (local) default
 Python version.  To specify the Python version and host OS type, run
 something like::
 
-  $ tox -e py311-linux
+  $ tox -e py313-linux
 
 To build and check the Python package, run::
 
@@ -140,3 +159,48 @@ specifications.
 .. _sbom4python: https://github.com/anthonyharrison/sbom4python
 .. _gitchangelog: https://github.com/sarnold/gitchangelog
 .. _pre-commit: http://pre-commit.com/
+
+
+.. |ci| image:: https://github.com/sarnold/pylogtailer/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/sarnold/pylogtailer/actions/workflows/ci.yml
+    :alt: CI Status
+
+.. |wheels| image:: https://github.com/sarnold/pylogtailer/actions/workflows/wheels.yml/badge.svg
+    :target: https://github.com/sarnold/pylogtailer/actions/workflows/wheels.yml
+    :alt: Wheel Status
+
+.. |badge| image:: https://github.com/sarnold/pylogtailer/actions/workflows/pylint.yml/badge.svg
+    :target: https://github.com/sarnold/pylogtailer/actions/workflows/pylint.yml
+    :alt: Pylint Status
+
+.. |release| image:: https://github.com/sarnold/pylogtailer/actions/workflows/release.yml/badge.svg
+    :target: https://github.com/sarnold/pylogtailer/actions/workflows/release.yml
+    :alt: Release Status
+
+.. |bandit| image:: https://github.com/sarnold/pylogtailer/actions/workflows/bandit.yml/badge.svg
+    :target: https://github.com/sarnold/pylogtailer/actions/workflows/bandit.yml
+    :alt: Security check - Bandit
+
+.. |cov| image:: https://raw.githubusercontent.com/sarnold/pylogtailer/badges/main/test-coverage.svg
+    :target: https://github.com/sarnold/pylogtailer/actions/workflows/coverage.yml
+    :alt: Test coverage
+
+.. |pylint| image:: https://raw.githubusercontent.com/sarnold/pylogtailer/badges/main/pylint-score.svg
+    :target: https://github.com/sarnold/pylogtailer/actions/workflows/pylint.yml
+    :alt: Pylint Score
+
+.. |license| image:: https://img.shields.io/badge/license-MIT-blue
+    :target: https://github.com/sarnold/pylogtailer/blob/main/LICENSE
+    :alt: License
+
+.. |tag| image:: https://img.shields.io/github/v/tag/sarnold/pylogtailer?color=green&include_prereleases&label=latest%20release
+    :target: https://github.com/sarnold/pylogtailer/releases
+    :alt: GitHub tag
+
+.. |python| image:: https://img.shields.io/badge/python-3.9+-blue.svg
+    :target: https://www.python.org/downloads/
+    :alt: Python
+
+.. |pre| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+   :target: https://github.com/pre-commit/pre-commit
+   :alt: pre-commit
