@@ -33,12 +33,12 @@ jobs:
           echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
           echo ${{ env.VERSION }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       # download all artifacts to project dir
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
 
       - name: check artifacts
         run: |
