@@ -11,7 +11,7 @@ Works with Python >= 3.2, on both POSIX and Windows.
 
 |pre| |cov| |pylint|
 
-|tag| |license| |python|
+|tag| |license| |reuse| |python|
 
 A python class that "watches" a directory and calls a callback(filename, lines)
 function every time one of the watched files gets written to, in real time.
@@ -200,6 +200,10 @@ specifications.
 .. |python| image:: https://img.shields.io/badge/python-3.9+-blue.svg
     :target: https://www.python.org/downloads/
     :alt: Python
+
+.. |reuse| image:: https://img.shields.io/badge/REUSE-compliant-blue.svg
+    :target: https://reuse.software/spec-3.3/
+    :alt: REUSE
 
 .. |pre| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
    :target: https://github.com/pre-commit/pre-commit
