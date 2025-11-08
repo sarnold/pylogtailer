@@ -1,3 +1,5 @@
+import codecs
+import locale
 from pathlib import Path
 
 import pytest
@@ -25,17 +27,49 @@ log_str = """
 """
 
 
-def callback(filename, lines):
+class TLogWatcher(LogWatcher):
+    """Override ``open()`` to decode log lines"""
+
+    @classmethod
+    def open(cls, file):
+        return codecs.open(file, 'r', encoding="utf-8", errors='ignore')
+
+
+def loop_callback(filename, lines):
     print(filename, lines)
 
 
-def test_log_watcher(tmp_path, capfd):
+def test_log_watcher_loop(tmp_path):
     """
     Create and read a short log file
     """
     tf1 = tmp_path / "tftpd.log"
     tf1.write_text(log_str, encoding="utf-8")
-    lw = LogWatcher(str(tmp_path), callback)
+    lw = LogWatcher(str(tmp_path), loop_callback)
+    lw.loop(blocking=False)
+
+
+def test_log_watcher_tail(tmp_path):
+    """
+    Create and read a short log file
+    """
+    tf1 = tmp_path / "tftpd.log"
+    tf1.write_text(log_str, encoding="utf-8")
+    lw = TLogWatcher(str(tmp_path), loop_callback)
+    lines = lw.tail(str(tf1), 5)
+    for line in lines:
+        assert isinstance(line, str)
+    print(f'\n{lines}')
+
+
+def test_log_watcher_tail_lines(tmp_path, capfd):
+    """
+    Create and read a short log file
+    """
+    tf1 = tmp_path / "tftpd.log"
+    tf1.write_text(log_str, encoding="utf-8")
+    lw = TLogWatcher(str(tmp_path), loop_callback, tail_lines=2)
     lw.loop(blocking=False)
     out, err = capfd.readouterr()
+    assert "tftpd.log" in out
     print(out)
