@@ -17,13 +17,9 @@ jobs:
       contents: read
     uses: ./.github/workflows/wheels.yml
 
-  build_docs:
-    name: Build docs
-    uses: ./.github/workflows/sphinx.yml
-
   create_release:
     name: Create Release
-    needs: [build_wheels, build_docs]
+    needs: [build_wheels]
     runs-on: ubuntu-22.04
 
     steps:
