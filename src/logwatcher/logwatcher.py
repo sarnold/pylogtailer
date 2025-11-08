@@ -8,7 +8,7 @@ import os
 import stat
 import time
 from shlex import split
-from typing import Callable, Dict
+from typing import IO, Callable, Dict, List
 
 
 class LogWatcher:
@@ -21,7 +21,7 @@ class LogWatcher:
         self,
         folder: str,
         callback: Callable,
-        extensions="log",
+        extensions: str = "log",
         tail_lines: int = 0,
         sizehint: int = 1048576,
     ):
@@ -77,7 +77,7 @@ class LogWatcher:
     def __del__(self):
         self.close()
 
-    def loop(self, interval=0.1, blocking=True):
+    def loop(self, interval: float = 0.1, blocking: bool = True):
         """
         Start a busy loop checking for file changes every *interval*
         seconds. If *blocking* is False make one loop then return.
@@ -94,11 +94,11 @@ class LogWatcher:
                 return
             time.sleep(interval)
 
-    def log(self, line):
+    def log(self, line: str):
         """Log when a file is un/watched"""
         print(line)
 
-    def listdir(self):
+    def listdir(self) -> List[str]:
         """List directory and filter files by extension.
         You may want to override this to add extra logic or globbing
         support.
@@ -109,7 +109,7 @@ class LogWatcher:
         return ls
 
     @classmethod
-    def open(cls, file):
+    def open(cls, file: str) -> IO:
         """Wrapper around open().
         By default files are opened in binary mode and readlines()
         will return bytes on both Python 2 and 3.
@@ -124,7 +124,7 @@ class LogWatcher:
         return open(file, 'rb')
 
     @classmethod
-    def tail(cls, fname, window):
+    def tail(cls, fname: str, window: int) -> "List[str] | List[bytes]":
         """Read last N lines from file fname."""
         if window <= 0:
             msg = f'invalid window value: {window}'
@@ -140,13 +140,13 @@ class LogWatcher:
             f.seek(0, os.SEEK_END)
             fsize = f.tell()
             block = -1
-            Exit = False
-            while not Exit:
+            stop = False
+            while not stop:
                 step = block * buff_size
                 if abs(step) >= fsize:
                     f.seek(0)
                     newdata = f.read(buff_size - (abs(step) - fsize))
-                    Exit = True
+                    stop = True
                 else:
                     f.seek(step, os.SEEK_END)
                     newdata = f.read(buff_size)
@@ -194,7 +194,7 @@ class LogWatcher:
             if fid not in self._files_map:
                 self.watch(fname)
 
-    def readlines(self, file):
+    def readlines(self, file: IO):
         """
         Read file lines since last access until EOF is reached and
         invoke callback.
@@ -205,7 +205,7 @@ class LogWatcher:
                 break
             self._callback(file.name, lines)
 
-    def watch(self, fname):
+    def watch(self, fname: str):
         """
         Watch the specified file.
         """
@@ -219,7 +219,7 @@ class LogWatcher:
             self.log(f"watching logfile {fname}")
             self._files_map[fid] = file
 
-    def unwatch(self, file, fid):
+    def unwatch(self, file: IO, fid: str):
         """
         File no longer exists. If it has been renamed try to read it
         for the last time in case we're dealing with a rotating log
@@ -233,7 +233,7 @@ class LogWatcher:
                 self._callback(file.name, lines)
 
     @staticmethod
-    def get_file_id(st):
+    def get_file_id(st: os.stat_result) -> str:
         if os.name == 'posix':
             return f"{st.st_dev:x}g{st.st_ino:x}"
         return f"{st.st_ctime:f}"
