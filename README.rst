@@ -16,6 +16,12 @@ Works with Python >= 3.2, on both POSIX and Windows.
 A python class that "watches" a directory and calls a callback(filename, lines)
 function every time one of the watched files gets written to, in real time.
 
+.. note:: The "initial coommit" in the changelog file was cleaned up and
+          packaged from `this ActiveState recipe`_.
+
+
+.. _this ActiveState recipe: https://code.activestate.com/recipes/577968-log-watcher-tail-f-log/
+
 Practically speaking, this can be compared to ``tail -F *.log`` UNIX
 command, but instead of having lines printed to stdout a python
 function gets called.
