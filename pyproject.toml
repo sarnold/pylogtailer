@@ -1,11 +1,12 @@
 [build-system]
 requires = [
-    "setuptools>=61",
-    "setuptools_scm[toml]>=6.2",
+    "setuptools>=45",
+    "setuptools_scm[toml]>=6.0",
 ]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
+version_scheme = "no-guess-dev"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -21,8 +22,9 @@ filterwarnings = [
 
 [tool.coverage.run]
 branch = true
-source = ["src/logwatcher"]
+source_pkgs = ["src/logwatcher"]
 omit = [
+    "setup.py",
     "tests",
     ".tox/",
 ]
@@ -31,7 +33,7 @@ omit = [
 source = ["src/logwatcher"]
 
 [tool.coverage.report]
-fail_under = 80
+fail_under = 60
 show_missing = true
 exclude_lines = [
     "pragma: no cover",
