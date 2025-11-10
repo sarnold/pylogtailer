@@ -1,5 +1,5 @@
 import codecs
-import locale
+import logging
 from pathlib import Path
 
 import pytest
@@ -49,14 +49,17 @@ def test_log_watcher_loop(tmp_path):
     lw.loop(blocking=False)
 
 
-def test_log_watcher_tail(tmp_path):
+def test_log_watcher_tail(caplog, tmp_path):
     """
     Create and read a short log file
     """
     tf1 = tmp_path / "tftpd.log"
     tf1.write_text(log_str, encoding="utf-8")
-    lw = TLogWatcher(str(tmp_path), loop_callback)
-    lines = lw.tail(str(tf1), 5)
+    with caplog.at_level(logging.DEBUG):
+        lw = TLogWatcher(str(tmp_path), loop_callback)
+        lines = lw.tail(str(tf1), 5)
+    assert "Watching logfile" in caplog.text
+    print(caplog.text)
     for line in lines:
         assert isinstance(line, str)
     print(f'\n{lines}')

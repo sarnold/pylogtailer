@@ -4,6 +4,7 @@ Works with Python >= 3.2, on both POSIX and Windows.
 """
 
 import errno
+import logging
 import os
 import stat
 import time
@@ -93,10 +94,6 @@ class LogWatcher:
             if not blocking:
                 return
             time.sleep(interval)
-
-    def log(self, line: str):
-        """Log when a file is un/watched"""
-        print(line)
 
     def listdir(self) -> List[str]:
         """List directory and filter files by extension.
@@ -216,7 +213,7 @@ class LogWatcher:
             if err.errno != errno.ENOENT:
                 raise
         else:
-            self.log(f"watching logfile {fname}")
+            logging.debug("Watching logfile %s", fname)
             self._files_map[fid] = file
 
     def unwatch(self, file: IO, fid: str):
@@ -225,7 +222,7 @@ class LogWatcher:
         for the last time in case we're dealing with a rotating log
         file.
         """
-        self.log(f"un-watching logfile {file.name}")
+        logging.debug("Un-watching logfile %s", file.name)
         del self._files_map[fid]
         with file:
             lines = file.readlines(self._sizehint)
