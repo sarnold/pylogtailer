@@ -16,7 +16,7 @@ Works with Python >= 3.2, on both POSIX and Windows.
 A python class that "watches" a directory and calls a callback(filename, lines)
 function every time one of the watched files gets written to, in real time.
 
-.. note:: The "initial coommit" in the changelog file was cleaned up and
+.. note:: The "initial commit" in the changelog file was cleaned up and
           packaged from `this ActiveState recipe`_.
 
 
