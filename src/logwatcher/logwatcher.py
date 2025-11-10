@@ -96,9 +96,9 @@ class LogWatcher:
             time.sleep(interval)
 
     def listdir(self) -> List[str]:
-        """List directory and filter files by extension.
-        You may want to override this to add extra logic or globbing
-        support.
+        """
+        List directory and filter files by extension. You may want to
+        override this to add extra logic or globbing support.
         """
         ls = os.listdir(self.folder)
         if self.extensions:
@@ -107,12 +107,12 @@ class LogWatcher:
 
     @classmethod
     def open(cls, file: str) -> IO:
-        """Wrapper around open().
-        By default files are opened in binary mode and readlines()
-        will return bytes on both Python 2 and 3.
-        This means callback() will deal with a list of bytes.
-        Can be overridden in order to deal with unicode strings
-        instead, like this::
+        """
+        Wrapper around open(). By default files are opened in binary
+        mode and readlines() will return bytes on both Python 2 and 3.
+        This means callback() will deal with a list of bytes. Can be
+        overridden in order to deal with unicode strings instead, like
+        this::
 
           import codecs, locale
           return codecs.open(file, 'r', encoding=locale.getpreferredencoding(),
@@ -122,7 +122,9 @@ class LogWatcher:
 
     @classmethod
     def tail(cls, fname: str, window: int) -> "List[str] | List[bytes]":
-        """Read last N lines from file fname."""
+        """
+        Read last N lines from file fname.
+        """
         if window <= 0:
             msg = f'invalid window value: {window}'
             raise ValueError(msg)
@@ -231,6 +233,10 @@ class LogWatcher:
 
     @staticmethod
     def get_file_id(st: os.stat_result) -> str:
+        """
+        Use attributes from ``os.stat_result`` to create a file ID on
+        primary platforms.
+        """
         if os.name == 'posix':
             return f"{st.st_dev:x}g{st.st_ino:x}"
         return f"{st.st_ctime:f}"

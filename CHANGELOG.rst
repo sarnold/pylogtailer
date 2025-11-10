@@ -2,7 +2,34 @@ Changelog
 =========
 
 
-v0.5.1 (2025-11-08)
+v0.5.3 (2025-11-10)
+-------------------
+
+Changes
+~~~~~~~
+- Cleanup some doc strings and update changelog. [Stephen L Arnold]
+
+Fixes
+~~~~~
+- Replace self.log with logging.debug statements. [Stephen L Arnold]
+
+  * print output is not so compatible with console consumers, eg, picotui
+  * this preserves the original output and makes it adjustable with a
+    quiet default
+  * update consumer test with caplog fixture
+
+
+v0.5.2 (2025-11-09)
+-------------------
+
+Changes
+~~~~~~~
+- Adjust build dep min versions for el9 build env. [Stephen L Arnold]
+
+  * set version_scheme for setuptools_scm to "no-guess-dev"
+
+
+v0.5.1 (2025-11-09)
 -------------------
 
 Changes
@@ -26,6 +53,8 @@ Changes
 
 Fixes
 ~~~~~
+- Restore expected behavior of download-artifact action. [Stephen L
+  Arnold]
 - Add type annotations and py.typed marker. [Stephen L Arnold]
 
   * quotes around type hints using '|' are apparently required on less than
