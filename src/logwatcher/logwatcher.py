@@ -9,7 +9,7 @@ import os
 import stat
 import time
 from shlex import split
-from typing import IO, Callable, Dict, List
+from typing import IO, Callable, Dict, List, Union
 
 
 class LogWatcher:
@@ -121,7 +121,7 @@ class LogWatcher:
         return open(file, 'rb')
 
     @classmethod
-    def tail(cls, fname: str, window: int) -> "List[str] | List[bytes]":
+    def tail(cls, fname: str, window: int) -> Union[List[str], List[bytes]]:
         """
         Read last N lines from file fname.
         """
