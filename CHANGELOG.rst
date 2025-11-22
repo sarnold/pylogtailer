@@ -2,11 +2,14 @@ Changelog
 =========
 
 
-v0.5.3 (2025-11-10)
+v0.5.3 (2025-11-22)
 -------------------
 
 Changes
 ~~~~~~~
+- Cleanup type annotations on overridden class method. [Stephen L
+  Arnold]
+- Cleanup typo in readme file. [Stephen L Arnold]
 - Cleanup some doc strings and update changelog. [Stephen L Arnold]
 
 Fixes
