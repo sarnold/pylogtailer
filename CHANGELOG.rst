@@ -2,14 +2,25 @@ Changelog
 =========
 
 
-v0.5.3 (2025-11-22)
+v0.5.4 (2025-11-22)
 -------------------
 
 Changes
 ~~~~~~~
+- Update .gitchangelog.rc and regenerate changelog file. [Stephen L
+  Arnold]
 - Cleanup type annotations on overridden class method. [Stephen L
   Arnold]
+
+  * update changelog file for release
 - Cleanup typo in readme file. [Stephen L Arnold]
+
+
+v0.5.3 (2025-11-10)
+-------------------
+
+Changes
+~~~~~~~
 - Cleanup some doc strings and update changelog. [Stephen L Arnold]
 
 Fixes
