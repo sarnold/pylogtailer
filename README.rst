@@ -39,9 +39,27 @@ Example::
   >>> lw = LogWatcher("/var/log/", callback)
   >>> lw.loop()
 
+Consumer example
+~~~~~~~~~~~~~~~~
+
+For a real-world example project consuming this package, check out this
+pyserv daemontui screenshot and the daemontui.py helper `source code`_.
+
+|console|
+
+Note this usage does not need to (re)print lines via callback, as it only
+needs to fill the display buffer.
+
+.. |console| image:: https://github.com/sarnold/pyserv/blob/master/gh/images/server_console.png
+    :target: https://github.com/sarnold/pyserv#operations-console
+    :alt: tui log display
+
+
+.. _source code: https://github.com/sarnold/pyserv/blob/66ed3e623fe782fa21be8692359b4eeaf581a012/src/pyserv/tui_helpers.py#L31
+
 
 Dev tools
-=========
+~~~~~~~~~
 
 Local tool dependencies to aid in development; install them for
 maximum enjoyment.
@@ -128,7 +146,7 @@ It's usually a good idea to update the hooks to the latest version::
 
 
 SBOM and license info
-=====================
+~~~~~~~~~~~~~~~~~~~~~
 
 This project is now compliant with the REUSE Specification Version 3.3, so the
 corresponding license information for all files can be found in the ``REUSE.toml``
