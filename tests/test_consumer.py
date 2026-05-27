@@ -1,4 +1,3 @@
-import codecs
 import logging
 from pathlib import Path
 
@@ -28,11 +27,13 @@ log_str = """
 
 
 class TLogWatcher(LogWatcher):
-    """Override ``open()`` to decode log lines"""
+    """
+    Overriding ``open()`` for decoding may lead to issues in newer Python
+    """
 
     @classmethod
     def open(cls, file):
-        return codecs.open(file, 'r', encoding="utf-8", errors='ignore')
+        return open(file, 'rb')
 
 
 def loop_callback(filename, lines):
@@ -61,7 +62,7 @@ def test_log_watcher_tail(caplog, tmp_path):
     assert "Watching logfile" in caplog.text
     print(caplog.text)
     for line in lines:
-        assert isinstance(line, str)
+        assert isinstance(line, bytes)
     print(f'\n{lines}')
 
 
